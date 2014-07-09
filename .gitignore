@@ -1,0 +1,6 @@
+/vendor
+/tests/sandbox.php
+/phpunit.xml
+.buildpath
+.project
+.settings

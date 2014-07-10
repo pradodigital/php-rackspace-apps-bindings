@@ -13,7 +13,7 @@ interface ClientAdapterInterface
      * @param mixed $body Optional message body.
      * @return mixed The response or a hydrated object.
      */
-    public function get($uri, $entityClass = NULL, $body = NULL);
+    public function get($uri, $entityClass = null, $body = null);
 
     /**
      * Perform a POST request to the specified relative uri with the given body
@@ -24,7 +24,7 @@ interface ClientAdapterInterface
      * @param mixed $body Optional message body.
      * @return mixed The response or a hydrated object.
      */
-    public function post($uri, $entityClass = NULL, $body = NULL);
+    public function post($uri, $entityClass = null, $body = null);
 
     /**
      * Perform a PUT request to the specified relative uri with the given body
@@ -35,7 +35,7 @@ interface ClientAdapterInterface
      * @param mixed $body Optional message body.
      * @return mixed The response or a hydrated object.
      */
-    public function put($uri, $entityClass = NULL, $body = NULL);
+    public function put($uri, $entityClass = null, $body = null);
 
     /**
      * Perform a DELETE request to the specified relative uri with the given
@@ -46,5 +46,5 @@ interface ClientAdapterInterface
      * @param mixed $body Optional message body.
      * @return mixed The response or a hydrated object.
      */
-    public function delete($uri, $entityClass = NULL, $body = NULL);
+    public function delete($uri, $entityClass = null, $body = null);
 }

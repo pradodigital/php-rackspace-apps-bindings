@@ -4,43 +4,43 @@ namespace PradoDigital\Rackspace\Apps\Entity;
 
 class Domain extends AbstractEntity
 {
-    protected $name;
+    private $name;
 
-    protected $accountNumber;
+    private $accountNumber;
 
-    protected $serviceType;
+    private $serviceType;
 
-    protected $exchangeBaseMailboxSize;
+    private $exchangeBaseMailboxSize;
 
-    protected $exchangeUsedStorage;
+    private $exchangeUsedStorage;
 
-    protected $exchangeTotalStorage;
+    private $exchangeTotalStorage;
 
-    protected $exchangeExtraStorage;
+    private $exchangeExtraStorage;
 
-    protected $exchangeMaxNumMailboxes;
+    private $exchangeMaxNumMailboxes;
 
-    protected $rsEmailBaseMailboxSize;
+    private $rsEmailBaseMailboxSize;
 
-    protected $rsEmailMaxNumberMailboxes;
+    private $rsEmailMaxNumberMailboxes;
 
-    protected $rsEmailExtraStorage;
+    private $rsEmailExtraStorage;
 
-    protected $rsEmailUsedStorage;
+    private $rsEmailUsedStorage;
 
-    protected $aliases;
+    private $aliases;
 
-    protected $archivingServiceEnabled;
+    private $archivingServiceEnabled;
 
-    protected $publicFoldersEnabled;
+    private $publicFoldersEnabled;
 
-    protected $blackBerryMobileServiceEnabled;
+    private $blackBerryMobileServiceEnabled;
 
-    protected $blackBerryLicenses;
+    private $blackBerryLicenses;
 
-    protected $activeSyncMobileServiceEnabled;
+    private $activeSyncMobileServiceEnabled;
 
-    protected $activeSyncLicenses;
+    private $activeSyncLicenses;
 
     public function __construct()
     {

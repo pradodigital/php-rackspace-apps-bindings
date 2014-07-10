@@ -6,39 +6,39 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class Mailbox extends AbstractEntity
 {
-    protected $name;
+    private $name;
 
-    protected $displayName;
+    private $displayName;
 
-    protected $createdDate;
+    private $createdDate;
 
-    protected $currentUsage;
+    private $currentUsage;
 
-    protected $contactInfo;
+    private $contactInfo;
 
-    protected $emailAddressList;
+    private $emailAddressList;
 
-    protected $emailForwardingAddress;
+    private $emailForwardingAddress;
 
-    protected $enabled;
+    private $enabled;
 
-    protected $hasActiveSyncMobileService;
+    private $hasActiveSyncMobileService;
 
-    protected $hasBlackBerryMobileService;
+    private $hasBlackBerryMobileService;
 
-    protected $isHidden;
+    private $isHidden;
 
-    protected $isPublicFolderAdmin;
+    private $isPublicFolderAdmin;
 
-    protected $lastLogin;
+    private $lastLogin;
 
-    protected $samAccountName;
+    private $samAccountName;
 
-    protected $size;
+    private $size;
 
-    protected $visibleInRackspaceEmailCompanyDirectory;
+    private $visibleInRackspaceEmailCompanyDirectory;
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null)
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
     {
         if (isset($data['createdDate'])) {
             $data['createdDate'] = new \DateTime($data['createdDate']);

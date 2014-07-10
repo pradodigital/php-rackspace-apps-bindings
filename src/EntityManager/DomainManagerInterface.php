@@ -2,7 +2,15 @@
 
 namespace PradoDigital\Rackspace\Apps\EntityManager;
 
-interface DomainManagerInterface extends EntityManagerInterface
+use PradoDigital\Rackspace\Apps\Entity\Domain;
+
+interface DomainManagerInterface
 {
-    function getArchivingSsoLoginUrl($domain);
+    public function fetchAll(array $criteria = null);
+
+    public function find(array $criteria);
+
+    public function getCatchAllAddress(Domain $domain);
+
+    public function getArchivingSsoLoginUrl(Domain $domain);
 }

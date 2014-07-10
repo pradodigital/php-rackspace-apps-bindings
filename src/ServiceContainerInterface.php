@@ -2,33 +2,33 @@
 
 namespace PradoDigital\Rackspace\Apps;
 
-use PradoDigital\Rackspace\Apps\Credentials\CredentialsInterface;
-
 interface ServiceContainerInterface
 {
-    /**
-     * @param \PradoDigital\Rackspace\Apps\Credentials\CredentialsInterface $credentials
-     */
-    function __construct(CredentialsInterface $credentials);
-
     /**
      * Get a shared CustomerManager instance.
      *
      * @return \PradoDigital\Rackspace\Apps\EntityManager\CustomerManagerInterface
      */
-    function getCustomerManager();
+    public function getCustomerManager();
+
+    /**
+     * Get a shared AdminManager instance.
+     *
+     * @return \PradoDigital\Rackspace\Apps\EntityManager\AdminManagerInterface
+     */
+    public function getAdminManager();
 
     /**
      * Get a shared DomainManager instance.
      *
      * @return \PradoDigital\Rackspace\Apps\EntityManager\DomainManagerInterface
      */
-    function getDomainManager();
+    public function getDomainManager();
 
     /**
      * Get a shared MailboxManager instance.
      *
      * @return \PradoDigital\Rackspace\Apps\EntityManager\MailboxManagerInterface
      */
-    function getMailboxManager();
+    public function getMailboxManager();
 }

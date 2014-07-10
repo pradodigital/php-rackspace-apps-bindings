@@ -2,14 +2,17 @@
 
 namespace PradoDigital\Rackspace\Apps\EntityManager;
 
+use PradoDigital\Rackspace\Apps\Entity\Domain;
+
 class DomainManager extends AbstractEntityManager implements DomainManagerInterface
 {
     /**
      * {@inheritDoc}
      */
-    public function fetchAll(array $criteria = NULL)
+    public function fetchAll(array $criteria = null)
     {
-        $entityClass = 'PradoDigital\\Rackspace\\Apps\\Entity\\DomainList';
+        $entityClass = 'PradoDigital\Rackspace\Apps\Entity\DomainList';
+
         return $this->client->get('domains', $entityClass);
     }
 
@@ -18,45 +21,34 @@ class DomainManager extends AbstractEntityManager implements DomainManagerInterf
      */
     public function find(array $criteria)
     {
-        $entityClass = 'PradoDigital\\Rackspace\\Apps\\Entity\\Domain';
+        $entityClass = 'PradoDigital\Rackspace\Apps\Entity\Domain';
+
         return $this->client->get(array('domains/{domainName}', array(
-            'domainName' => $this->resolveDomainName($criteria)
+            'domainName' => $criteria['domainName']
         )), $entityClass);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function create($entity)
+    public function getCatchAllAddress(Domain $domain)
     {
-        throw new \BadMethodCallException('DomainManager does not support the create method.', 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function update($entity)
-    {
-        throw new \BadMethodCallException('DomainManager does not support the update method.', 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function remove($entity)
-    {
-        throw new \BadMethodCallException('DomainManager does not support the remove method.', 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getArchivingSsoLoginUrl($domain)
-    {
-        $response = $this->client->get(array('domains/{domainName}/archivingSSOLoginURL', array(
-            'domainName' => $this->resolveDomainName($domain)
+        $response = $this->client->get(array('domains/{domainName}/catchalladdress', array(
+            'domainName' => $domain->getName()
         )));
 
-        return json_decode($response, TRUE);
+        return json_decode($response, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getArchivingSsoLoginUrl(Domain $domain)
+    {
+        $response = $this->client->get(array('domains/{domainName}/archivingSSOLoginURL', array(
+            'domainName' => $domain->getName()
+        )));
+
+        return json_decode($response, true);
     }
 }

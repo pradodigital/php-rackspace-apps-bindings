@@ -6,14 +6,14 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class DomainList extends AbstractEntityList
 {
-    protected $domains;
+    private $domains;
 
     public function __construct()
     {
         $this->domains = array();
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null)
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
     {
         if (isset($data['domains'])) {
             foreach ($data['domains'] as $value) {

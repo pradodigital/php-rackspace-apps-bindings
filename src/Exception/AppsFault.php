@@ -9,7 +9,7 @@ class AppsFault extends \RuntimeException implements Exception, DenormalizableIn
 {
     public $details;
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null)
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
     {
         foreach ($data as $attribute => $value) {
             $this->set($attribute, $value);

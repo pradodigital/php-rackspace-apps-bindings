@@ -7,9 +7,6 @@
     "pimple/pimple" : "~2.1",
     "symfony/serializer" : "~2.5"
   },
-  "require-dev" : {
-    "monolog/monolog" : "~1.10"
-  },
   "authors" : [ {
     "name" : "Jose Prado",
     "email" : "cowlby@me.com"
@@ -17,9 +14,10 @@
   "keywords" : [ "rackspace apps", "api bindings" ],
   "autoload" : {
     "psr-4" : {
-      "PradoDigital\\Rackspace\\Apps\\" : "src/"
+      "PradoDigital\\Rackspace\\Apps\\" : "src/",
+      "PradoDigital\\Tests\\Rackspace\\Apps\\" : "tests/"
     }
   },
-  "license" : "MIT",
-  "type" : "library"
+  "type" : "library",
+  "license" : "MIT"
 }

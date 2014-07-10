@@ -8,15 +8,15 @@ class LoginToken extends AbstractEntity
 {
     const URL_TOKEN_LOGIN = 'http://cp.rackspace.com/TokenLogin.aspx?loginToken={token}';
 
-    protected $id;
+    private $id;
 
-    protected $user;
+    private $user;
 
-    protected $token;
+    private $token;
 
-    protected $dateCreated;
+    private $dateCreated;
 
-    protected $expires;
+    private $expires;
 
     public function __construct()
     {
@@ -28,7 +28,7 @@ class LoginToken extends AbstractEntity
         return str_replace('{token}', $this->getToken(), self::URL_TOKEN_LOGIN);
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null)
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
     {
         if (isset($data['dateCreated'])) {
             $data['dateCreated'] = new \DateTime($data['dateCreated']);

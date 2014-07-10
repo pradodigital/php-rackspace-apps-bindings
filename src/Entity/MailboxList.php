@@ -4,22 +4,16 @@ namespace PradoDigital\Rackspace\Apps\Entity;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
-class MailboxList extends AbstractEntity implements \IteratorAggregate
+class MailboxList extends AbstractEntityList
 {
-    protected $offset;
-
-    protected $size;
-
-    protected $total;
-
-    protected $mailboxes;
+    private $mailboxes;
 
     public function __construct()
     {
         $this->mailboxes = array();
     }
 
-    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null)
+    public function denormalize(DenormalizerInterface $denormalizer, $data, $format = null, array $context = array())
     {
         if (isset($data['mailboxes'])) {
             foreach ($data['mailboxes'] as $value) {
@@ -37,42 +31,9 @@ class MailboxList extends AbstractEntity implements \IteratorAggregate
         return new \ArrayIterator($this->getMailboxes());
     }
 
-    public function getOffset()
-    {
-        return $this->offset;
-    }
-
-    public function getSize()
-    {
-        return $this->size;
-    }
-
-    public function getTotal()
-    {
-        return $this->total;
-    }
-
     public function getMailboxes()
     {
         return $this->mailboxes;
-    }
-
-    public function setOffset($offset)
-    {
-        $this->offset = $offset;
-        return $this;
-    }
-
-    public function setSize($size)
-    {
-        $this->size = $size;
-        return $this;
-    }
-
-    public function setTotal($total)
-    {
-        $this->total = $total;
-        return $this;
     }
 
     public function addMailbox(Mailbox $mailbox)

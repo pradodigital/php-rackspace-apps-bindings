@@ -2,13 +2,9 @@
 
 namespace PradoDigital\Rackspace\Apps\EntityManager;
 
-interface MailboxManagerInterface
+interface AdminManagerInterface
 {
     public function fetchAll(array $criteria = null);
 
     public function find(array $criteria);
-
-    public function addEmailAddress(array $criteria);
-
-    public function deleteEmailAddress(array $criteria);
 }

@@ -2,6 +2,8 @@
 
 namespace PradoDigital\Rackspace\Apps\EntityManager;
 
+use PradoDigital\Rackspace\Apps\Exception\BadRequestFault;
+
 class MailboxManager extends AbstractEntityManager implements MailboxManagerInterface
 {
     const URL_INDEX = 'domains/{domainName}/ex/mailboxes';
@@ -11,12 +13,14 @@ class MailboxManager extends AbstractEntityManager implements MailboxManagerInte
     /**
      * {@inheritDoc}
      */
-    public function fetchAll(array $criteria = NULL)
+    public function fetchAll(array $criteria = null)
     {
-        $entityClass = 'PradoDigital\\Rackspace\\Apps\\Entity\\MailboxList';
-        return $this->client->get(array(self::URL_INDEX, array(
-            'domainName' => $this->resolveDomainName($criteria)
-        )), $entityClass);
+        if (!isset($criteria['domainName'])) {
+            throw new BadRequestFault();
+        }
+
+        $entityClass = 'PradoDigital\Rackspace\Apps\Entity\MailboxList';
+        return $this->client->get(array(self::URL_INDEX, $criteria), $entityClass);
     }
 
     /**
@@ -24,35 +28,12 @@ class MailboxManager extends AbstractEntityManager implements MailboxManagerInte
      */
     public function find(array $criteria)
     {
-        $entityClass = 'PradoDigital\\Rackspace\\Apps\\Entity\\Mailbox';
-        return $this->client->get(array(self::URL_SHOW, array(
-            'domainName' => $this->resolveDomainName($criteria),
-            'mailboxName' => $this->resolveMailboxName($criteria)
-        )), $entityClass);
-    }
+        if (!isset($criteria['domainName']) || !isset($criteria['mailboxName'])) {
+            throw new BadRequestFault();
+        }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function create($entity)
-    {
-        throw new \BadMethodCallException('MailboxManager does not support the create method.', 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function update($entity)
-    {
-        throw new \BadMethodCallException('MailboxManager does not support the update method.', 0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function remove($entity)
-    {
-        throw new \BadMethodCallException('MailboxManager does not support the remove method.', 0);
+        $entityClass = 'PradoDigital\Rackspace\Apps\Entity\Mailbox';
+        return $this->client->get(array(self::URL_SHOW, $criteria), $entityClass);
     }
 
     /**
@@ -60,11 +41,11 @@ class MailboxManager extends AbstractEntityManager implements MailboxManagerInte
      */
     public function addEmailAddress(array $criteria)
     {
-        $this->client->post(array(self::URL_EMAIL_ADDRESS, array(
-            'domainName' => $this->resolveDomainName($criteria),
-            'mailboxName' => $this->resolveMailboxName($criteria),
-            'emailAddress' => $this->resolveEmailAddress($criteria)
-        )));
+        if (!isset($criteria['domainName']) || !isset($criteria['mailboxName']) || !isset($criteria['emailAddress'])) {
+            throw new BadRequestFault();
+        }
+
+        $this->client->post(array(self::URL_EMAIL_ADDRESS, $criteria));
 
         return $this;
     }
@@ -74,11 +55,11 @@ class MailboxManager extends AbstractEntityManager implements MailboxManagerInte
      */
     public function deleteEmailAddress(array $criteria)
     {
-        $this->client->delete(array(self::URL_EMAIL_ADDRESS, array(
-            'domainName' => $this->resolveDomainName($criteria),
-            'mailboxName' => $this->resolveMailboxName($criteria),
-            'emailAddress' => $this->resolveEmailAddress($criteria)
-        )));
+        if (!isset($criteria['domainName']) || !isset($criteria['mailboxName']) || !isset($criteria['emailAddress'])) {
+            throw new BadRequestFault();
+        }
+
+        $this->client->delete(array(self::URL_EMAIL_ADDRESS, $criteria));
 
         return $this;
     }

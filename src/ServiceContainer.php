@@ -11,10 +11,11 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\CustomNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use GuzzleHttp\Event\ErrorEvent;
+use PradoDigital\Rackspace\Apps\Credentials\GuzzleAuthenticationSubscriber;
 
 class ServiceContainer extends Container implements ServiceContainerInterface
 {
-    const RACKSPACE_API_ENDPOINT = 'http://api.emailsrvr.com/';
+    const RACKSPACE_API_ENDPOINT = 'https://api.emailsrvr.com';
     const RACKSPACE_API_VERSION = 'v1';
 
     /**
@@ -26,30 +27,51 @@ class ServiceContainer extends Container implements ServiceContainerInterface
     public function __construct(CredentialsInterface $credentials)
     {
         $this['credentials'] = $credentials;
+        $this['api.endpoint'] = self::RACKSPACE_API_ENDPOINT;
+        $this['api.version'] = self::RACKSPACE_API_VERSION;
 
-        $this['endpoint'] = self::RACKSPACE_API_ENDPOINT;
+        // Create Serializer definitions.
+        $this['serializer.normalizers'] = function ($container) {
+            return array(new CustomNormalizer());
+        };
 
-        $this['guzzle'] = function($container) {
+        $this['serializer.encoders'] = function ($container) {
+            return array(new JsonEncoder());
+        };
 
-            $baseUrl = $container['endpoint'] . '/{version}/customers/{customerAccountNumber}';
-            $client = new Client($baseUrl, array(
-                'version' => self::RACKSPACE_API_VERSION,
-                'customerAccountNumber' => 'me'
+        $this['serializer'] = function ($container) {
+            return new Serializer($container['serializer.normalizers'], $container['serializer.encoders']);
+        };
+
+        // Create HTTP Client definitions.
+        $this['guzzle'] = function ($container) {
+
+            $client = new Client(array(
+                'base_url' => array(
+                    $container['api.endpoint'] . '/{version}/customers/{customerAccountNumber}/',
+                    array(
+                        'version' => $container['api.version'],
+                        'customerAccountNumber' => 'me'
+                    )
+                ),
+                'defaults' => array(
+                    'headers' => array(
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/x-www-form-urlencoded'
+                    )
+                )
             ));
 
-            $client->setDefaultHeaders(array_merge(array(
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/x-www-form-urlencoded'
-            ), $container['credentials']->getAuthHeaders()));
+            $client->getEmitter()->attach(new GuzzleAuthenticationSubscriber($container['credentials']));
 
             $client->getEmitter()->on('error', function (ErrorEvent $event) use ($container) {
 
-                $json = $container['serializer']->decode($event['response']->getBody(), 'json');
+                $json = $container['serializer']->decode($event->getResponse()->getBody(), 'json');
 
                 if (count($json) === 1) {
 
                     $apiFault = key($json);
-                    $faultClass = 'PradoDigital\\Rackspace\\Apps\\Exception\\';
+                    $faultClass = 'PradoDigital\Rackspace\Apps\Exception\\';
                     $faults = array(
                         'unauthorizedFault' => 'UnauthorizedFault',
                         'itemNotFoundFault' => 'ItemNotFoundFault',
@@ -66,19 +88,24 @@ class ServiceContainer extends Container implements ServiceContainerInterface
             return $client;
         };
 
-        $this['http.client'] = function($container) {
-            return new GuzzleClientAdapter($container['guzzle']);
+        $this['http.client'] = function ($container) {
+            return new GuzzleClientAdapter($container['guzzle'], $container['serializer']);
         };
 
-        $this['customer_manager'] = function($container) {
+        // Create Entity Manager definitions.
+        $this['customer_manager'] = function ($container) {
             return new EntityManager\CustomerManager($container['http.client']);
         };
 
-        $this['domain_manager'] = function($container) {
+        $this['admin_manager'] = function ($container) {
+            return new EntityManager\AdminManager($container['http.client']);
+        };
+
+        $this['domain_manager'] = function ($container) {
             return new EntityManager\DomainManager($container['http.client']);
         };
 
-        $this['mailbox_manager'] = function($container) {
+        $this['mailbox_manager'] = function ($container) {
             return new EntityManager\MailboxManager($container['http.client']);
         };
     }
@@ -90,6 +117,15 @@ class ServiceContainer extends Container implements ServiceContainerInterface
     public function getCustomerManager()
     {
         return $this['customer_manager'];
+    }
+
+    /**
+     * {@inheritDoc}
+     * @return \PradoDigital\Rackspace\Apps\EntityManager\AdminManagerInterface
+     */
+    public function getAdminManager()
+    {
+        return $this['admin_manager'];
     }
 
     /**

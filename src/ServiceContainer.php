@@ -2,7 +2,7 @@
 
 namespace PradoDigital\Rackspace\Apps;
 
-use Pimple\Container;
+use Pimple as Container;
 use GuzzleHttp\Client;
 use PradoDigital\Rackspace\Apps\EntityManager;
 use PradoDigital\Rackspace\Apps\Credentials\CredentialsInterface;
@@ -31,20 +31,20 @@ class ServiceContainer extends Container implements ServiceContainerInterface
         $this['api.version'] = self::RACKSPACE_API_VERSION;
 
         // Create Serializer definitions.
-        $this['serializer.normalizers'] = function ($container) {
+        $this['serializer.normalizers'] = $this->share(function ($container) {
             return array(new CustomNormalizer());
-        };
+        });
 
-        $this['serializer.encoders'] = function ($container) {
+        $this['serializer.encoders'] = $this->share(function ($container) {
             return array(new JsonEncoder());
-        };
+        });
 
-        $this['serializer'] = function ($container) {
+        $this['serializer'] = $this->share(function ($container) {
             return new Serializer($container['serializer.normalizers'], $container['serializer.encoders']);
-        };
+        });
 
         // Create HTTP Client definitions.
-        $this['guzzle'] = function ($container) {
+        $this['guzzle'] = $this->share(function ($container) {
 
             $client = new Client(array(
                 'base_url' => array(
@@ -86,28 +86,28 @@ class ServiceContainer extends Container implements ServiceContainerInterface
             });
 
             return $client;
-        };
+        });
 
-        $this['http.client'] = function ($container) {
+        $this['http.client'] = $this->share(function ($container) {
             return new GuzzleClientAdapter($container['guzzle'], $container['serializer']);
-        };
+        });
 
         // Create Entity Manager definitions.
-        $this['customer_manager'] = function ($container) {
+        $this['customer_manager'] = $this->share(function ($container) {
             return new EntityManager\CustomerManager($container['http.client']);
-        };
+        });
 
-        $this['admin_manager'] = function ($container) {
+        $this['admin_manager'] = $this->share(function ($container) {
             return new EntityManager\AdminManager($container['http.client']);
-        };
+        });
 
-        $this['domain_manager'] = function ($container) {
+        $this['domain_manager'] = $this->share(function ($container) {
             return new EntityManager\DomainManager($container['http.client']);
-        };
+        });
 
-        $this['mailbox_manager'] = function ($container) {
+        $this['mailbox_manager'] = $this->share(function ($container) {
             return new EntityManager\MailboxManager($container['http.client']);
-        };
+        });
     }
 
     /**

@@ -4,7 +4,7 @@
   "require" : {
     "php" : ">=5.4",
     "guzzlehttp/guzzle" : "~4.0",
-    "pimple/pimple" : "~1.1",
+    "pimple/pimple" : "~1.0",
     "symfony/serializer" : "~2.5"
   },
   "authors" : [ {
@@ -18,6 +18,6 @@
       "PradoDigital\\Tests\\Rackspace\\Apps\\" : "tests/"
     }
   },
-  "license" : "MIT",
-  "type" : "library"
+  "type" : "library",
+  "license" : "MIT"
 }
